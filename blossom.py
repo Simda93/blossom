@@ -159,13 +159,8 @@ class Blossom:
         if self.even:
             for edge in self.out_edges:
                 remaining = edge.remaining_charge()
-                """
-                if remaining == 0 and (edge not in not_yet_full):
-                    print("Problem: Tu je zakopany pes!" + edge.__str__()+str(edge.v1.get_outer_most().active)+str(edge.v1.get_outer_most().even)+str(edge.v2.get_outer_most().active)+str(edge.v2.get_outer_most().even))
-                """
                 if(not edge.v1.get_outer_most().active)and(not edge.v2.get_outer_most().active):
-                       print("Problem: totok je problem asik")
-
+                       print("Problem: Non of outermost blossoms is active")
                 outer1 = edge.v1.get_outer_most()
                 outer2 = edge.v2.get_outer_most()
                 if outer1.active and outer2.active:
@@ -177,20 +172,13 @@ class Blossom:
                 if not outer1.active and outer2.active:
                     if outer2.even and outer1.even:
                         max_delta = min(max_delta, remaining)
-                if not  outer1.active and not outer2.active:
-                    print("How did we get ther ?")
         else:
             max_delta = self.charge - self.min_charge
         return max_delta
 
     def get_max_delta(self, c=0):
-        """
-        if c > 20:
-            print("asi sme v cykle " + self.edge_to_parent.__str__())
-            return INF
-        """
         if not(self.active) or not self.out:
-            print("Problem: tu su tie zaklady babylonskej veze"+str(self)+str(self.get_root()))
+            print("Problem: Checking delta for wrong blossom"+str(self)+" "+str(self.get_root()))
             input()
         max_delta = INF
         for bl in self.suspended_blossoms:
@@ -309,7 +297,7 @@ class Blossom:
         odd[-1].outter_blossom = None
         odd[-1].even = False
         if (odd[-1].parent.parent == odd[-1]):
-            print("cyklus, rubem " + self.inner_blossoms)
+            print("Problem: parent in cycle" + self.inner_blossoms)
         for bl in self.suspended_blossoms:
             bl.parent = odd[-1]
 
@@ -382,7 +370,7 @@ class Blossom:
             wrap.parent.suspended_blossoms.append(wrap)
             wrap.parent.suspended_blossoms.remove(chain2[0])
         if(len(chain2)%2 != 1):
-            print("Chain ma zlu dlzku")
+            print("Problem: wrong chain length")
         for bl in chain2:
             bl.active = False
             print("deaktivovany " + str(bl))
@@ -399,7 +387,7 @@ class Blossom:
             if vertices[wrap.v.number] != None:
                 vertices[wrap.v.number] = wrap
             else:
-                print("Problem: strom nebol mapovany vrcholom")
+                print("Problem: tree not mapped with right vertex")
         print("Nastal pripad 3, spolocny vrchol je: " + chain2[0].__str__())
 
     def blossoms_to_root(self):
@@ -450,7 +438,7 @@ class Blossom:
                 self.v = entry.v
                 Node = entry
             else:
-                print("Problem: chyba pri alternacii blossomu a zmene stopky"+str(self.v)+" "+str(exit_bl.v)+" "+str(entry.v)+" "+self.inner_blossoms)
+                print("Problem: chyba pri alternacii blossomu a zmene stopky"+str(self.v)+" "+str(exit_bl.v)+" "+str(entry.v)+" "+str(self.inner_blossoms))
             new_chain = self.inner_blossoms+self.inner_blossoms
             self.inner_blossoms = new_chain[self.inner_blossoms.index(Node):self.inner_blossoms.index(Node)+len(self.inner_blossoms)]
 
@@ -564,5 +552,5 @@ for edge in filled_edges:
     if edge.is_selected():
         cost = cost + edge.w
         solution.append(edge)
-print("cena: " + str(cost))
+print("Cena: " + str(cost))
 print("Hrany v rieseni: " + str([str(s) for s in filled_edges if s.is_selected()]))
